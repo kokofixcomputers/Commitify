@@ -1,0 +1,136 @@
+name: Build Executables
+
+on:
+  workflow_dispatch:
+    inputs:
+      pre_release_version:
+        description: 'Pre-Release Version'
+        required: true
+        default: ''
+        type: string
+
+permissions: write-all
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build executable for Linux
+        run: |
+          pyinstaller --onefile commitify.py
+
+      - name: Move Linux executable
+        run: |
+          mv dist/commitify ./commitify-linux
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-executable
+          path: commitify-linux
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build executable for Windows
+        run: |
+          pyinstaller --onefile commitify.py
+
+      - name: Move Windows executable
+        run: |
+          move dist\commitify.exe commitify.exe
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-executable
+          path: commitify.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build executable for macOS
+        run: |
+          pyinstaller --onefile commitify.py
+
+      - name: Move macOS executable
+        run: |
+          mv dist/commitify ./commitify-darwin
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-executable
+          path: commitify-darwin
+
+  release:
+    needs: [build-linux, build-windows, build-macos]
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Checkout code for release job
+        uses: actions/checkout@v3
+      
+      # Download artifacts from previous jobs.
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4 
+        with:
+          name: linux-executable
+      
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4 
+        with:
+          name: windows-executable
+      
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4 
+        with:
+          name: macos-executable
+      
+      # List downloaded files for debugging purposes.
+      - name: List downloaded files before release upload
+        run: ls -al
+      
+      # Create a pre-release using softprops/action-gh-release.
+      - name: Create Pre-Release Assets using softprops/action-gh-release
+        uses: softprops/action-gh-release@v1 
+        with:
+          tag_name: "${{ github.event.inputs.pre_release_version }}-prerelease" # Use input for tag_name.
+          release_name: "Pre-release ${{ github.event.inputs.pre_release_version }}"
+          draft: false # Set to false to publish the release.
+          prerelease: true # Mark this as a pre-release.
+          files: commitify-linux, commitify.exe, commitify-darwin 
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
