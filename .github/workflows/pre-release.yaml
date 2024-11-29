@@ -131,6 +131,6 @@ jobs:
           release_name: "Pre-release ${{ github.event.inputs.pre_release_version }}"
           draft: false # Set to false to publish the release.
           prerelease: true # Mark this as a pre-release.
-          files: commitify-linux, commitify.exe, commitify-darwin 
+          files: commitify-linux, commitify.exe, commitify-darwin, commitify.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
