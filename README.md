@@ -12,6 +12,7 @@ Using Commitify is a good way to keep your commits consistent, and it's easy to 
 - Python 3.6+
 
 ## Installation & Usage
+### Method 1: Python
 Head over to the release section of the repository and download the latest version!
 Then run
 ```bash
@@ -23,6 +24,10 @@ You don't need to install dependencies, Every time. Just run the script after in
 git add .
 python commitify.py # Use this instead of `git commit`
 ```
+### Method 2: Executable
+Head over to the release section of the repository and download the latest version!
+Then run the executable in your terminal.
+This is useful in cases where you don't want to install python.
 
 ## Channels
 There are different channels to download commitify from. List of them:
