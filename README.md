@@ -29,6 +29,8 @@ Head over to the release section of the repository and download the latest versi
 Then run the executable in your terminal.
 This is useful in cases where you don't want to install python.
 
+Arguments are in the [wiki](https://github.com/kokofixcomputers/Commitify/wiki).
+
 ## Channels
 There are different channels to download commitify from. List of them:
 | Name | Description | Avaialble | Download Location |
