@@ -1,11 +1,10 @@
 name: Build Executables
 
-permissions:
-  contents: write # Allow writing to repository contents
-
 on:
   release:
     types: [published]
+
+permissions: write-all
 
 jobs:
   build-linux:
@@ -39,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: linux-executable
-          path: commitify-linux
+          path: commitify
 
   build-windows:
     runs-on: windows-latest
@@ -118,6 +117,6 @@ jobs:
         uses: softprops/action-gh-release@v1 # GitHub Action to create a release.
         with:
           tag_name: ${{ github.event.release.tag_name }}
-          files: commitify-linux, commitify.exe, commitify # Correctly formatted as a string.
+          files: commitify, commitify.exe, commitify # Correctly formatted as a string.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
