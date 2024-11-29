@@ -1,4 +1,4 @@
-name: Build Executables
+name: Pre-Release
 
 on:
   workflow_dispatch:
