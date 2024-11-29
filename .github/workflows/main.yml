@@ -95,13 +95,7 @@ jobs:
       # Install GitHub CLI
       - name: Install GitHub CLI
         run: sudo apt-get install gh # For Ubuntu; adjust for other OS if needed.
-
-      # Authenticate with GITHUB_TOKEN
-      - name: Authenticate with GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh auth login --with-token <<< "$GITHUB_TOKEN"
-
+        
       # Upload Release Assets using GitHub CLI
       - name: Upload Release Assets
         env:
