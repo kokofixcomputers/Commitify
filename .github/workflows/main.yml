@@ -25,6 +25,14 @@ jobs:
       - name: Build executable for Linux
         run: |
           pyinstaller --onefile commitify.py
+          
+      - name: List
+        run: |
+          cd dist
+          ls
+          cd ../
+      - name: mv
+        run: |
           mv dist/commitify ./commitify-linux
 
       - name: Upload Linux artifact
@@ -50,6 +58,13 @@ jobs:
       - name: Build executable for Windows
         run: |
           pyinstaller --onefile commitify.py
+
+      - name: ls
+        run: |
+          dir
+
+      - name: mv
+        run: |
           move dist\commitify.exe commitify.exe # Just rename to commitify.exe
 
       - name: Upload Windows artifact
@@ -75,6 +90,15 @@ jobs:
       - name: Build executable for macOS
         run: |
           pyinstaller --onefile commitify.py
+
+      - name: List
+        run: |
+          cd dist
+          ls
+          cd ../
+
+      - name: mv
+        run: |
           mv dist/commitify ./commitify # No suffix for macOS
 
       - name: Upload macOS artifact
