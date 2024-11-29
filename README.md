@@ -5,7 +5,7 @@ Style your commits.
 Commitify is a easy way to style your commits, Just answer some questions, and it will commit using `git` for you.
 
 ## Why Commitify?
-Using Commitify is a good way to keep your commits consistent, and it's easy to use.
+Using Commitify is a good way to keep your commits consistent, and it's easy to use. Passes checks in commitlint.
 
 ## Requirements
 - Git (and path set)
