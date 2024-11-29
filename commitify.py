@@ -6,14 +6,19 @@ from InquirerPy.base.control import Choice
 parser = argparse.ArgumentParser(description="Argument parser")
 
 # Add the -a flag as a boolean action
-parser.add_argument("-a", action="store_true", help="A flag that indicates something.")
+parser.add_argument("-a", action="store_true", help="Automaticlly add files before commiting.")
+parser.add_argument("-p", action="store_true", help="Automaticlly push files after commiting.")
+
 
 # Parse the arguments
 args = parser.parse_args()
 
 add = "-a" if args.a else ""
+push = True if args.p else False
 if args.a:
     print(f"Added {add} to the command.")
+if args.p:
+    print(f"Push after commit.")
 
 
 def validate_required_input(input):
@@ -254,6 +259,9 @@ def main():
         os.system(
             f"git commit {add} -m '{answers['change_type']} {description['description']}' -m '{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>'"
         )
+        if push:
+            print("Pushing changes.")
+            os.system("git push")
 
 
 if __name__ == "__main__":
