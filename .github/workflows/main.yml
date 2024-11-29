@@ -1,5 +1,8 @@
 name: Build Executables
 
+permissions:
+  contents: write # Allow writing to repository contents
+
 on:
   release:
     types: [published]
