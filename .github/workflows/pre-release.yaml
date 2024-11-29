@@ -8,10 +8,27 @@ on:
         required: true
         default: ''
         type: string
+      pre_release_number:
+        description: 'Pre-Release Number'
+        required: true
+        default: '1'
+        type: string
 
 permissions: write-all
 
 jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate Changelog
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -127,9 +144,10 @@ jobs:
       - name: Create Pre-Release Assets using softprops/action-gh-release
         uses: softprops/action-gh-release@v1 
         with:
-          tag_name: "${{ github.event.inputs.pre_release_version }}-prerelease" # Use input for tag_name.
+          tag_name: "${{ github.event.inputs.pre_release_version }}-prerelease${{ github.event.inputs.pre_release_number }}" # Use input for tag_name.
           release_name: "Pre-release ${{ github.event.inputs.pre_release_version }}"
-          draft: false # Set to false to publish the release.
+          body: ${{ steps.changelog.outputs.clean_changelog }}
+          draft: false
           prerelease: true # Mark this as a pre-release.
           files: commitify-linux, commitify.exe, commitify-darwin, commitify.py
         env:
