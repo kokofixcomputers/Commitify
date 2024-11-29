@@ -34,7 +34,7 @@ jobs:
           mv dist/commitify ./commitify-linux
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # Updated to v4
         with:
           name: linux-executable
           path: commitify-linux # Ensure this matches the moved file's name
@@ -66,7 +66,7 @@ jobs:
           move dist\commitify.exe commitify.exe # Just rename to commitify.exe
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # Updated to v4
         with:
           name: windows-executable
           path: commitify.exe # Ensure this matches the moved file's name
@@ -98,7 +98,7 @@ jobs:
           mv dist/commitify ./commitify # No suffix for macOS
 
       - name: Upload macOS artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # Updated to v4
         with:
           name: macos-executable
           path: commitify # Ensure this matches the moved file's name
