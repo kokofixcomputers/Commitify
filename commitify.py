@@ -3,15 +3,33 @@ import argparse
 from InquirerPy import prompt
 from InquirerPy.base.control import Choice
 
-parser = argparse.ArgumentParser(description="Argument parser")
+parser = argparse.ArgumentParser(description="Argument parser", add_help=False)
 
 # Add the -a flag as a boolean action
 parser.add_argument("-a", action="store_true", help="Automaticlly add files before commiting.")
 parser.add_argument("-p", action="store_true", help="Automaticlly push files after commiting.")
+parser.add_argument("-h", action="store_true", help="Help.")
+parser.add_argument("--help", action="store_true", help="Help.")
+
+
 
 
 # Parse the arguments
 args = parser.parse_args()
+
+if args.h or args.help:
+    print("Commitify")
+    print("Style your commits.")
+    print("Made by kokofixcomputers at https://kokodev.cc")
+    print("GitHub: https://github.com/kokofixcomputers/Commitify")
+    print("""------------------------------------------------------""")
+    print("Available flag/arguments:")
+    print("Arguments may be used together.")
+    print("-a Automatically add files before commiting with `git add`")
+    print("-p Automatically push files after commiting with `git push`")
+    print("-h, --help Help (This Help)")
+    exit(0)
+    
 
 add = "-a" if args.a else ""
 push = True if args.p else False
@@ -19,6 +37,8 @@ if args.a:
     print(f"Added {add} to the command.")
 if args.p:
     print(f"Push after commit.")
+    
+
 
 
 def validate_required_input(input):
