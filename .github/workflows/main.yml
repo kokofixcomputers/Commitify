@@ -118,6 +118,6 @@ jobs:
         uses: softprops/action-gh-release@v1 # GitHub Action to create a release.
         with:
           tag_name: ${{ github.event.release.tag_name }}
-          files: linux-executable, windows-executable, macos-executable # Ensure these names match exactly.
+          files: commitify-linux, commitify.exe, commitify # Ensure these names match exactly.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
