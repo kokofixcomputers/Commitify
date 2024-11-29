@@ -24,13 +24,12 @@ jobs:
       - name: Build executable for Linux
         run: |
           pyinstaller --onefile commitify.py
-          
-      - name: List
+
+      - name: List files after build (Linux)
         run: |
-          cd dist
-          ls
-          cd ../
-      - name: mv
+          ls dist/
+
+      - name: Move Linux executable
         run: |
           mv dist/commitify ./commitify-linux
 
@@ -38,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: linux-executable
-          path: commitify
+          path: commitify-linux # Ensure this matches the moved file's name
 
   build-windows:
     runs-on: windows-latest
@@ -58,11 +57,11 @@ jobs:
         run: |
           pyinstaller --onefile commitify.py
 
-      - name: ls
+      - name: List files after build (Windows)
         run: |
-          dir
+          dir dist
 
-      - name: mv
+      - name: Move Windows executable
         run: |
           move dist\commitify.exe commitify.exe # Just rename to commitify.exe
 
@@ -70,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: windows-executable
-          path: commitify.exe # Just the binary without any suffix
+          path: commitify.exe # Ensure this matches the moved file's name
 
   build-macos:
     runs-on: macos-latest
@@ -90,13 +89,11 @@ jobs:
         run: |
           pyinstaller --onefile commitify.py
 
-      - name: List
+      - name: List files after build (macOS)
         run: |
-          cd dist
-          ls
-          cd ../
+          ls dist/
 
-      - name: mv
+      - name: Move macOS executable
         run: |
           mv dist/commitify ./commitify # No suffix for macOS
 
@@ -104,19 +101,23 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: macos-executable
-          path: commitify # Just the binary without any suffix
+          path: commitify # Ensure this matches the moved file's name
 
   release:
     needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest # This can be any OS since we are just uploading artifacts.
     steps:
-      - name: Checkout code
+      - name: Checkout code for release job
         uses: actions/checkout@v3
-
+      
+      # Debugging step to list all files before release upload.
+      - name: List files before release upload
+        run: ls -al
+      
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1 # GitHub Action to create a release.
         with:
           tag_name: ${{ github.event.release.tag_name }}
-          files: commitify, commitify.exe, commitify # Correctly formatted as a string.
+          files: commitify-linux, commitify.exe, commitify # Ensure these names match exactly.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
