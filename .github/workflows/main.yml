@@ -155,7 +155,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: "${{ github.event.inputs.release_version }}" # Use input for tag_name.
           title: "${{ github.event.inputs.release_version }}"
-          body: ${{ steps.changes.outputs.changes }}  # Include changelog in release notes
+          body: ${{ steps.build_changelog.outputs.changelog }}  # Use the generated changelog as release notes
           prerelease: false
           files: |
            commitify-linux
