@@ -149,16 +149,12 @@ jobs:
       - name: List downloaded files before release upload
         run: ls -al
       
-      - name: Create Pre-Release Assets using softprops/action-gh-release
-        uses: marvinpinto/action-automatic-releases@latest
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "${{ github.event.inputs.release_version }}" # Use input for tag_name.
-          title: "${{ github.event.inputs.release_version }}"
+          tag_name: "${{ github.ref }}"  # Use the tag that triggered the workflow
+          title: "${{ github.ref }}"       # Title for the release
           body: ${{ steps.build_changelog.outputs.changelog }}  # Use the generated changelog as release notes
-          prerelease: false
-          files: |
-           commitify-linux
-           commitify.exe
-           commitify-darwin
-           commitify.py
+          files: commitify-linux, commitify.exe, commitify-darwin, commitify.py  # List of files to include in the release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token for authentication
