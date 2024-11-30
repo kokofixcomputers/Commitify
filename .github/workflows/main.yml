@@ -112,6 +112,12 @@ jobs:
     steps:
       - name: Checkout code for release job
         uses: actions/checkout@v3
+
+      - name: Get Changes between Tags
+        id: changes
+        uses: simbo/changes-between-tags-action@v1
+        with:
+          tag-pattern: '^[0-9]+\.[0-9]+\.[0-9]+$'  # Adjusted regex for tags without 'v'
       
       # Download artifacts from previous jobs.
       - name: Download Linux artifact
@@ -138,7 +144,8 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: "${{ github.event.inputs.release_version }}" # Use input for tag_name.
-          title: "Release${{ github.event.inputs.release_version }}"
+          title: "${{ github.event.inputs.release_version }}"
+          body: ${{ steps.changes.outputs.changes }}  # Include changelog in release notes
           prerelease: false
           files: |
            commitify-linux
