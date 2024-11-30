@@ -10,7 +10,7 @@ on:
         type: string
       pre_release_number:
         description: 'Pre-Release Number'
-        required: true
+        required: false
         default: '1'
         type: string
 
@@ -140,15 +140,15 @@ jobs:
       - name: List downloaded files before release upload
         run: ls -al
       
-      # Create a pre-release using softprops/action-gh-release.
       - name: Create Pre-Release Assets using softprops/action-gh-release
-        uses: softprops/action-gh-release@v1 
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          tag_name: "${{ github.event.inputs.pre_release_version }}-prerelease${{ github.event.inputs.pre_release_number }}" # Use input for tag_name.
-          release_name: "Pre-release ${{ github.event.inputs.pre_release_version }}"
-          body: ${{ steps.changelog.outputs.clean_changelog }}
-          draft: false
-          prerelease: true # Mark this as a pre-release.
-          files: commitify-linux, commitify.exe, commitify-darwin, commitify.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "${{ github.event.inputs.pre_release_version }}-prerelease${{ github.event.inputs.pre_release_number }}" # Use input for tag_name.
+          title: "Pre-release${{ github.event.inputs.pre_release_version }}"
+          prerelease: true
+          files: |
+           commitify-linux
+           commitify.exe
+           commitify-darwin
+           commitify.py

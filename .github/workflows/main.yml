@@ -1,8 +1,14 @@
 name: Build Executables
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release Version'
+        required: true
+        default: ''
+        type: string
+
 
 permissions: write-all
 
@@ -118,11 +124,15 @@ jobs:
       - name: List downloaded files before release upload
         run: ls -al
       
-      # Upload Release Assets using softprops/action-gh-release.
-      - name: Upload Release Assets using softprops/action-gh-release
-        uses: softprops/action-gh-release@v1 # GitHub Action to create a release.
+      - name: Create Pre-Release Assets using softprops/action-gh-release
+        uses: marvinpinto/action-automatic-releases@latest
         with:
-          tag_name: ${{ github.event.release.tag_name }}
-          files: commitify-linux, commitify.exe, commitify-darwin, commitify.py # Ensure these names match exactly.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "${{ github.event.inputs.release_version }}" # Use input for tag_name.
+          title: "Release${{ github.event.inputs.release_version }}"
+          prerelease: false
+          files: |
+           commitify-linux
+           commitify.exe
+           commitify-darwin
+           commitify.py
