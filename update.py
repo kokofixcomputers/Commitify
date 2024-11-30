@@ -23,15 +23,22 @@ def check_for_updates(version):
             latest_version = data['tag_name']
             release_notes = data['body']
             print(f"Latest Release: {latest_version}")
-            return latest_version == version
+            found_commitify = False
+            for asset in data['assets']:
+                if asset['name'] == 'commitify.py':
+                    download_url = asset['browser_download_url']
+                    print(f"Download link for commitify.py: {download_url}")
+                    found_commitify = True
+                    break
+            return latest_version == version, download_url, found_commitify
         else:
             print(f"Failed to fetch updates: {response.status_code} - {response.text}")
             return "Failed to fetch updates"
     
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
-def update_script():
-    download_script("https://raw.githubusercontent.com/kokofixcomputers/Commitify/refs/heads/main/commitify.py", "commitify.py")
+def update_script(download_url):
+    download_script(download_url, "commitify.py")
     print("Commitify script updated successfully!")
     print("Please restart the script.")
 

@@ -1,7 +1,17 @@
 import os
+import sys
 import argparse
+import requests
 from InquirerPy import prompt
 from InquirerPy.base.control import Choice
+
+# METADATA:
+VERSION = '1.0.6'
+PRE_RELEASE = False
+# METADATA ENDS
+
+def is_running_through_pyinstaller():
+    return hasattr(sys, '_MEIPASS')
 
 parser = argparse.ArgumentParser(description="Argument parser", add_help=False)
 
@@ -11,11 +21,35 @@ parser.add_argument("-p", action="store_true", help="Automaticlly push files aft
 parser.add_argument("-h", action="store_true", help="Help.")
 parser.add_argument("--help", action="store_true", help="Help.")
 
+# Create a subparser for commands
+commandparser = parser.add_subparsers(dest='command', required=False)
+update = commandparser.add_parser('update', help='Update the script to latest version')
+
+
+def download_script(url, filename):
+    response = requests.get(url)
+    with open(filename, 'wb') as f:
+        f.write(response.content)
+    print(f"Downloaded {filename}")
 
 
 
 # Parse the arguments
 args = parser.parse_args()
+
+if args.command == 'update':
+    if is_running_through_pyinstaller():
+        print("WARNING: Update only works with the python script. Or else the python script will be downloaded. More versions will be added soon.")
+    print("Downloading Update Script. This won't take too long.")
+    download_script("https://raw.githubusercontent.com/kokofixcomputers/Commitify/refs/heads/main/update.py", "update.py")
+    import update
+    print("Checking for updates...")
+    updates, download_url, found = update.check_for_updates(VERSION)
+    if updates:
+        print("Updates available!")
+        print("Updating...")
+        update.update_script(download_url)
+    exit(0)
 
 if args.h or args.help:
     print("Commitify")
@@ -28,6 +62,8 @@ if args.h or args.help:
     print("-a Automatically add files before commiting with `git add`")
     print("-p Automatically push files after commiting with `git push`")
     print("-h, --help Help (This Help)")
+    print("Available commands:")
+    print("update Automatically update the script with the latest version.")
     exit(0)
     
 
