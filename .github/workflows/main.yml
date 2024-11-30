@@ -120,14 +120,11 @@ jobs:
           mode: "COMMIT"  # Use commit-based mode
           configurationJson: |
             {
-              "template": "# Changelog\n\n{{CHANGELOG}}",
-              "categories": [
-                { "title": "## Features", "labels": ["feat", "feature"] },
-                { "title": "## Fixes", "labels": ["fix", "bug"] },
-                { "title": "## Other", "labels": [] }
-              ]
+              "template": "# Changelog\n\n{{CHANGELOG}}",  // Simple template
+              "ignore_labels": [],  // No labels to ignore
+              "empty_template": "- No changes"  // Message if no changes found
             }
-          token: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token for authentication
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       # Download artifacts from previous jobs.
       - name: Download Linux artifact
