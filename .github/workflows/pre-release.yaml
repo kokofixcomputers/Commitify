@@ -43,6 +43,9 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
       - name: Build executable for Linux
         run: |
           pyinstaller --onefile commitify.py
@@ -71,6 +74,9 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
       - name: Build executable for Windows
         run: |
           pyinstaller --onefile commitify.py
@@ -98,6 +104,9 @@ jobs:
 
       - name: Install PyInstaller
         run: pip install pyinstaller
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
 
       - name: Build executable for macOS
         run: |
