@@ -160,7 +160,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: "${{ github.event.inputs.pre_release_version }}-prerelease${{ github.event.inputs.pre_release_number }}" # Use input for tag_name.
-          title: "Pre-release${{ github.event.inputs.pre_release_version }}"
+          title: "${{ github.event.inputs.pre_release_version }}"
           body: ${{ steps.changes.outputs.changes }}  # Include changelog in release notes
           prerelease: true
           files: |

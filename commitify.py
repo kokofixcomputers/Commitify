@@ -312,8 +312,9 @@ def main():
         issuesclosed = ""
     if confirmed_details["confirm_details"]:
         print("Commit details confirmed! Commit initiated.")
+        print(f"git commit {add} -m '{answers['change_type']} {description['description']}' -m '{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>'")
         os.system(
-            f"git commit {add} -m '{answers['change_type']} {description['description']}' -m '{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>'"
+            f"""git commit {add} -m "{answers['change_type']} {description['description']}" -m "{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>" """
         )
         if push:
             print("Pushing changes.")
