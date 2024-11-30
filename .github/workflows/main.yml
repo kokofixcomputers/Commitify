@@ -117,7 +117,7 @@ jobs:
         id: changes
         uses: simbo/changes-between-tags-action@v1
         with:
-          tag-pattern: '^[0-9]+\.[0-9]+\.[0-9]+$'  # Adjusted regex for tags without 'v'
+          tag-pattern: '^[0-9]+\.[0-9]+\.[0-9]+(-prerelease[0-9]*)?$'
       
       # Download artifacts from previous jobs.
       - name: Download Linux artifact
