@@ -172,7 +172,6 @@ jobs:
               ],
               "ignore_labels": [],
               "empty_template": "- No changes",
-              // Custom formatting for commits
               "commit_template": "- `{{SHA}}`: {{message}} ({{author}})"
             }
           token: ${{ secrets.GITHUB_TOKEN }}
