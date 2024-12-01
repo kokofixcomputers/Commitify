@@ -159,7 +159,7 @@ jobs:
                     "🩹 fix:", 
                     "🚨 fix:",
                     "⚰️ fix:",
-                    "💚 ci:"
+                    "\uD83D\uDC9A ci:"
                   ] 
                 },
                 { "title": "## Performance Improvements", "labels": ["⚡️ perf:" ] },
