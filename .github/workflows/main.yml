@@ -168,7 +168,7 @@ jobs:
                 { "title": "## Style Changes", "labels": ["style", ":art: style:" ] },
                 { "title": "## Critical Fixes", "labels": [":ambulance: fix:", ":fire: fix:" ] },
                 { "title": "## Breaking Changes", "labels": ["BREAKING CHANGE", ":boom: BREAKING CHANGE:" ] },
-                { "title": "## Other Changes", "labels": [] }  // Catch-all for any unclassified changes
+                { "title": "## Other Changes", "labels": [] }
               ],
               "ignore_labels": [],
               "empty_template": "- No changes",
