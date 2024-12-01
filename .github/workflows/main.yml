@@ -120,8 +120,7 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@v5
         with:
           mode: "COMMIT"  # Use commit-based mode
-          fromTag: "latest"
-          toTag: "main"
+          base: main
           configurationJson: |
             {
               "template": "# Changelog\n\n{{CHANGELOG}}",
