@@ -49,7 +49,7 @@ if args.command == 'update':
         print("Updates available!")
         print("Updating...")
         update.update_script(download_url)
-    exit(0)
+    sys.exit(0)
 
 if args.h or args.help:
     print("Commitify")
