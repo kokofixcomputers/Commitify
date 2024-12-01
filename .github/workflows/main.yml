@@ -115,12 +115,18 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history to access tags
 
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
       - name: Build Changelog
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v5
         with:
           mode: "COMMIT"  # Use commit-based mode
-          base: main
+          fromTag: ${{ env.LATEST_TAG }}  # Use the latest tag found in the previous step
+          toTag: main  # Compare to the main branch
           configurationJson: |
             {
               "template": "# Changelog\n\n{{CHANGELOG}}",
