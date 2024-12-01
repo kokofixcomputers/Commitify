@@ -30,6 +30,7 @@ def check_for_updates(version):
                     print(f"Download link for commitify.py: {download_url}")
                     found_commitify = True
                     break
+            print(latest_version != version)
             return latest_version != version, download_url, found_commitify
         else:
             print(f"Failed to fetch updates: {response.status_code} - {response.text}")
