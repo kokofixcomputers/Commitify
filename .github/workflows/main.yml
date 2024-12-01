@@ -120,9 +120,51 @@ jobs:
           mode: "COMMIT"  # Use commit-based mode
           configurationJson: |
             {
-              "template": "# Changelog\n\n{{CHANGELOG}}",  // Simple template
-              "ignore_labels": [],  // No labels to ignore
-              "empty_template": "- No changes"  // Message if no changes found
+              "template": "# Changelog\n\n{{CHANGELOG}}",
+              "categories": [
+                { 
+                  "title": "## Features", 
+                  "labels": [
+                    "feat", 
+                    ":sparkles: feat:", 
+                    ":chart_with_upwards_trend: feat:", 
+                    ":rocket: deploy:", 
+                    ":alien: feat:", 
+                    ":children_crossing: feat:", 
+                    ":building_construction: refactor:", 
+                    ":wheelchair: feat:", 
+                    ":seedling: feat:", 
+                    ":heavy_plus_sign: feat:",  
+                    ":heavy_minus_sign: fix:",
+                    ":dizzy: feat:",
+                    ":money_with_wings: chore:",
+                    ":necktie: feat:",
+                    ":stethoscope: feat:",
+                    ":egg: feat:"
+                  ] 
+                },
+                { 
+                  "title": "## Fixes", 
+                  "labels": [
+                    "fix", 
+                    ":bug: fix:", 
+                    ":adhesive_bandage: fix:", 
+                    ":rotating_light: fix:",
+                    ":coffin: fix:",
+                    ":green_heart: ci:"
+                  ] 
+                },
+                { "title": "## Performance Improvements", "labels": [":zap: perf:" ] },
+                { "title": "## Documentation", "labels": ["docs", ":memo: docs:" ] },
+                { "title": "## Style Changes", "labels": ["style", ":art: style:" ] },
+                { "title": "## Critical Fixes", "labels": [":ambulance: fix:", ":fire: fix:" ] },
+                { "title": "## Breaking Changes", "labels": ["BREAKING CHANGE", ":boom: BREAKING CHANGE:" ] },
+                { "title": "## Other Changes", "labels": [] }  // Catch-all for any unclassified changes
+              ],
+              "ignore_labels": [],
+              "empty_template": "- No changes",
+              // Custom formatting for commits
+              "commit_template": "- `{{SHA}}`: {{message}} ({{author}})"
             }
           token: ${{ secrets.GITHUB_TOKEN }}
       
