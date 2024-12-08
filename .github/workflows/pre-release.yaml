@@ -1,39 +1,26 @@
-name: Pre-Release
+name: Build Executables
 
 on:
   workflow_dispatch:
     inputs:
-      pre_release_version:
-        description: 'Pre-Release Version'
+      release_version:
+        description: 'Release Version'
         required: true
         default: ''
         type: string
-      pre_release_number:
-        description: 'Pre-Release Number'
-        required: false
-        default: '1'
-        type: string
+
 
 permissions: write-all
 
 jobs:
-  generate-changelog:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Generate Changelog
-        id: changelog
-        uses: TriPSs/conventional-changelog-action@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
   build-linux:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -42,9 +29,6 @@ jobs:
 
       - name: Install PyInstaller
         run: pip install pyinstaller
-
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
 
       - name: Build executable for Linux
         run: |
@@ -55,10 +39,10 @@ jobs:
           mv dist/commitify ./commitify-linux
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4 # Use v4
         with:
           name: linux-executable
-          path: commitify-linux
+          path: commitify-linux # Ensure this matches the moved file's name
 
   build-windows:
     runs-on: windows-latest
@@ -71,11 +55,11 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install PyInstaller
-        run: pip install pyinstaller
-
       - name: Install Dependencies
         run: pip install -r requirements.txt
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
 
       - name: Build executable for Windows
         run: |
@@ -83,13 +67,13 @@ jobs:
 
       - name: Move Windows executable
         run: |
-          move dist\commitify.exe commitify.exe
+          move dist\commitify.exe commitify.exe # Just rename to commitify.exe
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4 # Use v4
         with:
           name: windows-executable
-          path: commitify.exe
+          path: commitify.exe # Ensure this matches the moved file's name
 
   build-macos:
     runs-on: macos-latest
@@ -117,37 +101,93 @@ jobs:
           mv dist/commitify ./commitify-darwin
 
       - name: Upload macOS artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4 # Use v4
         with:
           name: macos-executable
-          path: commitify-darwin
+          path: commitify-darwin # Ensure this matches the moved file's name
 
   release:
     needs: [build-linux, build-windows, build-macos]
-    runs-on: ubuntu-latest 
+    runs-on: ubuntu-latest # This can be any OS since we are just uploading artifacts.
     steps:
       - name: Checkout code for release job
         uses: actions/checkout@v3
-
-      - name: Get Changes between Tags
-        id: changes
-        uses: simbo/changes-between-tags-action@v1
         with:
-          tag-pattern: '^[0-9]+\.[0-9]+\.[0-9]+(-prerelease[0-9]*)?$'
+          fetch-depth: 0  # Fetch all history to access tags
+
+      - name: Get Latest Tag
+        id: get_latest_tag
+        run: |
+          echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Build Changelog
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          mode: "COMMIT"  # Use commit-based mode
+          fromTag: ${{ env.LATEST_TAG }}  # Use the latest tag found in the previous step
+          toTag: main  # Compare to the main branch
+          configurationJson: |
+            {
+              "categories": [
+                { 
+                  "title": "## Features", 
+                  "labels": [
+                    "feat", 
+                    "✨ feat:", 
+                    "📈 feat:", 
+                    "🚀 deploy:", 
+                    "👽️ feat:", 
+                    "🚸 feat:", 
+                    "🏗️ refactor:", 
+                    "♿️ feat:", 
+                    "🌱 feat:", 
+                    "➕ feat:",  
+                    "➖ fix:",
+                    "💫 feat:",
+                    "💸 chore:",
+                    "👔 feat:",
+                    "🩺 feat:",
+                    "🥚 feat:"
+                  ] 
+                },
+                { 
+                  "title": "## Fixes", 
+                  "labels": [
+                    "fix", 
+                    "🐛 fix:", 
+                    "🩹 fix:", 
+                    "🚨 fix:",
+                    "⚰️ fix:",
+                    "\uD83D\uDC9A ci:"
+                  ] 
+                },
+                { "title": "## Performance Improvements", "labels": ["⚡️ perf:" ] },
+                { "title": "## Documentation", "labels": ["docs", "📝 docs:" ] },
+                { "title": "## Style Changes", "labels": ["style", "🎨 style:" ] },
+                { "title": "## Critical Fixes", "labels": ["🚑️ fix:", "🔥 fix:" ] },
+                { "title": "## Breaking Changes", "labels": ["BREAKING CHANGE", "💥 BREAKING CHANGE:" ] },
+                { "title": "## Other Changes", "labels": [] }
+              ],
+              "ignore_labels": [],
+              "empty_template": "- No changes",
+              "commit_template": "- `{{SHA}}`: {{message}} ({{author}})"
+            }
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       # Download artifacts from previous jobs.
       - name: Download Linux artifact
-        uses: actions/download-artifact@v4 
+        uses: actions/download-artifact@v4 # Use v4 to download artifacts.
         with:
           name: linux-executable
       
       - name: Download Windows artifact
-        uses: actions/download-artifact@v4 
+        uses: actions/download-artifact@v4 # Use v4 to download artifacts.
         with:
           name: windows-executable
       
       - name: Download macOS artifact
-        uses: actions/download-artifact@v4 
+        uses: actions/download-artifact@v4 # Use v4 to download artifacts.
         with:
           name: macos-executable
       
@@ -156,15 +196,11 @@ jobs:
         run: ls -al
       
       - name: Create Pre-Release Assets using softprops/action-gh-release
-        uses: marvinpinto/action-automatic-releases@latest
+        uses: softprops/action-gh-release@v1
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: "${{ github.event.inputs.pre_release_version }}-prerelease${{ github.event.inputs.pre_release_number }}" # Use input for tag_name.
-          title: "${{ github.event.inputs.pre_release_version }}"
-          body: ${{ steps.changes.outputs.changes }}  # Include changelog in release notes
-          prerelease: true
-          files: |
-           commitify-linux
-           commitify.exe
-           commitify-darwin
-           commitify.py
+          tag_name: "pre-${{ github.event.inputs.release_version }}" # Use input for tag_name.
+          name: "pre-${{ github.event.inputs.release_version }}"
+          body: ${{ steps.build_changelog.outputs.changelog }}  # Use the generated changelog as release notes
+          files: commitify-linux, commitify.exe, commitify-darwin, commitify.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token for authentication
