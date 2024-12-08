@@ -201,6 +201,7 @@ jobs:
           tag_name: "pre-${{ github.event.inputs.release_version }}" # Use input for tag_name.
           name: "pre-${{ github.event.inputs.release_version }}"
           body: ${{ steps.build_changelog.outputs.changelog }}  # Use the generated changelog as release notes
+          prerelease: true
           files: commitify-linux, commitify.exe, commitify-darwin, commitify.py
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use the GitHub token for authentication
