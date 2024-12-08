@@ -6,7 +6,7 @@ from InquirerPy import prompt
 from InquirerPy.base.control import Choice
 
 # METADATA:
-VERSION = '1.0.6'
+VERSION = '1.2.2'
 PRE_RELEASE = False
 # METADATA ENDS
 
@@ -64,13 +64,13 @@ if args.h or args.help:
     print("-h, --help Help (This Help)")
     print("Available commands:")
     print("update Automatically update the script with the latest version.")
-    exit(0)
+    sys.exit(0)
     
 
-add = "-a" if args.a else ""
+add = True if args.a else False
 push = True if args.p else False
 if args.a:
-    print(f"Added {add} to the command.")
+    print(f"Running git add.")
 if args.p:
     print(f"Push after commit.")
     
@@ -312,9 +312,12 @@ def main():
         issuesclosed = ""
     if confirmed_details["confirm_details"]:
         print("Commit details confirmed! Commit initiated.")
-        print(f"git commit {add} -m '{answers['change_type']} {description['description']}' -m '{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>'")
+        if add:
+            print("Adding changes.")
+            os.system(f"git add .")
+        print(f"git commit -m '{answers['change_type']} {description['description']}' -m '{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>'")
         os.system(
-            f"""git commit {add} -m "{answers['change_type']} {description['description']}" -m "{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>" """
+            f"""git commit -m "{answers['change_type']} {description['description']}" -m "{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>" """
         )
         if push:
             print("Pushing changes.")
