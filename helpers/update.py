@@ -38,12 +38,9 @@ def check_for_updates(version):
     
     except requests.exceptions.RequestException as e:
         print(f"An error occurred: {e}")
+
+
 def update_script(download_url):
     download_script(download_url, "commitify.py")
     print("Commitify script updated successfully!")
     print("Please restart the script.")
-
-
-
-
-

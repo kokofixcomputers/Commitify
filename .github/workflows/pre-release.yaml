@@ -30,9 +30,14 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
+      - name: Update Metadata
+        run: |
+          python tools/gh_actions metadata VERSION ${{ github.event.inputs.release_version }}
+          python tools/gh_actions metadata PRE_RELEASE true
+
       - name: Build executable for Linux
         run: |
-          pyinstaller --onefile commitify.py
+          pyinstaller --onefile --add-data "helpers/*;helpers" commitify.py
 
       - name: Move Linux executable
         run: |
@@ -61,9 +66,14 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
+      - name: Update Metadata
+        run: |
+          python tools/gh_actions metadata VERSION ${{ github.event.inputs.release_version }}
+          python tools/gh_actions metadata PRE_RELEASE true
+
       - name: Build executable for Windows
         run: |
-          pyinstaller --onefile commitify.py
+          pyinstaller --onefile --add-data "helpers/*;helpers" commitify.py
 
       - name: Move Windows executable
         run: |
@@ -92,9 +102,14 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
 
+      - name: Update Metadata
+        run: |
+          python tools/gh_actions metadata VERSION ${{ github.event.inputs.release_version }}
+          python tools/gh_actions metadata PRE_RELEASE true
+
       - name: Build executable for macOS
         run: |
-          pyinstaller --onefile commitify.py
+          pyinstaller --onefile --add-data "helpers/*;helpers" --add-data "tools/*;tools" commitify.py
 
       - name: Move macOS executable
         run: |

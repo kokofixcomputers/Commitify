@@ -1,14 +1,20 @@
+# METADATA
+VERSION = '1.2.2'
+PRE_RELEASE = False
+# METADATA ENDS
+
 import os
 import sys
 import argparse
 import requests
 from InquirerPy import prompt
 from InquirerPy.base.control import Choice
+from helpers import config as config_helper
+from helpers import utils as utils_helper
+import printedcolors
 
-# METADATA:
-VERSION = '1.2.2'
-PRE_RELEASE = False
-# METADATA ENDS
+Color = printedcolors.Color
+fg_color = Color.fg
 
 def is_running_through_pyinstaller():
     return hasattr(sys, '_MEIPASS')
@@ -24,6 +30,11 @@ parser.add_argument("--help", action="store_true", help="Help.")
 # Create a subparser for commands
 commandparser = parser.add_subparsers(dest='command', required=False)
 update = commandparser.add_parser('update', help='Update the script to latest version')
+init_git = commandparser.add_parser('init', help='Inits the git project with commitify.')
+
+def validate_required_input(input):
+    """Validate that the input is not empty."""
+    return bool(input)
 
 
 def download_script(url, filename):
@@ -39,16 +50,67 @@ args = parser.parse_args()
 
 if args.command == 'update':
     if is_running_through_pyinstaller():
-        print("WARNING: Update only works with the python script. Or else the python script will be downloaded. More versions will be added soon.")
+        print("WARNING: Update only works with the python script. More versions will be added soon.")
+        sys.exit(1)
     print("Downloading Update Script. This won't take too long.")
-    download_script("https://raw.githubusercontent.com/kokofixcomputers/Commitify/refs/heads/main/update.py", "update.py")
-    import update
+    download_script("https://raw.githubusercontent.com/kokofixcomputers/Commitify/refs/heads/main/helpers/update.py", "helpers/update.py")
+    from helpers import update
+    # Updating is not currently implemented.
+    print("FeatureNotImplemented: This feature has not been implemented.")
+    exit(1)
     print("Checking for updates...")
     updates, download_url, found = update.check_for_updates(VERSION)
     if updates:
         print("Updates available!")
         print("Updating...")
         update.update_script(download_url)
+    sys.exit(0)
+
+elif args.command == 'init':
+    if not utils_helper.is_git_directory():
+        print(fg_color.red + "Error: The current directory is not a git initiated directory. Please `cd` into a git directory and try again." + Color.reset)
+        sys.exit(1)
+    current_dir = os.getcwd()
+    if not config_helper.check_project_directory(current_dir):
+        print("Welcome to Commitify! Initiating the current directory. Please wait...")
+        git_remotes = utils_helper.get_git_remotes()
+        git_branches = utils_helper.get_git_branches()
+        def create_choices_from_branches(branches):
+            choices = [Choice(name=branch, value=branch) for branch in branches]
+            return choices
+        choices = create_choices_from_branches(git_branches)
+        standard_format_choices = [
+            Choice(name="Gitmoji", value="gitmoji")
+        ]
+
+        choice = prompt(
+            [
+                {
+                    "type": "list",
+                    "name": "change_type",
+                    "message": "Select a branch you want to commit to. (Move up and down to reveal more choices):",
+                    "choices": choices,
+                    "default": choices[0].value,
+                    "pointer": "❯",
+                    "validate": validate_required_input,
+                }
+            ]
+        )
+        standard_format_choice = prompt(
+            [
+                {
+                    "type": "list",
+                    "name": "standard_format",
+                    "message": "Select a standard format. (Move up and down to reveal more choices):",
+                    "choices": standard_format_choices,
+                    "default": standard_format_choices[0].value,
+                    "pointer": "❯",
+                    "validate": validate_required_input,
+                }
+            ]
+        )
+
+        config_helper.ensure_project_directory(current_dir, choice['change_type'], standard_format_choice['standard_format'])
     sys.exit(0)
 
 if args.h or args.help:
@@ -64,6 +126,7 @@ if args.h or args.help:
     print("-h, --help Help (This Help)")
     print("Available commands:")
     print("update Automatically update the script with the latest version.")
+    print("init Inits the git project with commitify.")
     sys.exit(0)
     
 
@@ -76,13 +139,11 @@ if args.p:
     
 
 
-
-def validate_required_input(input):
-    """Validate that the input is not empty."""
-    return bool(input)
-
-
 def main():
+    current_working_directory = os.getcwd()
+    if not config_helper.check_project_directory(current_working_directory):
+        print(fg_color.red + "Error: Project not initiated with Commitify. Please run <commitify file> init. Then re-try." + Color.reset)
+        exit(1)
     # Define the choices with emojis
     choices = [
         Choice(name="🎨 Improve structure / format of the code.", value=":art: style:"),

@@ -1,2 +1,4 @@
 InquirerPy
 requests
+configurationlib
+printedcolors

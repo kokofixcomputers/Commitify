@@ -11,7 +11,7 @@ Using Commitify is a good way to keep your commits consistent, and it's easy to 
 - Git (and path set)
 - Python 3.6+
 
-## Installation & Usage
+## Installation
 ### Method 1: Python
 Head over to the release section of the repository and download the latest version!
 Then run
@@ -30,6 +30,13 @@ Then run the executable in your terminal.
 This is useful in cases where you don't want to install python.
 
 Arguments are in the [wiki](https://github.com/kokofixcomputers/Commitify/wiki).
+
+## Usage
+### Initiating A Project
+Before you can use Commitify in your project, You must initiated it first. If you haven't setup a git repository with this:
+```bash
+git init .
+```
 
 ## Channels
 There are different channels to download commitify from. List of them:
