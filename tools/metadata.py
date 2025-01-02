@@ -9,8 +9,8 @@ def set_metadata(file, metadata_name, metadata_value):
         metadata_name (str): The name of the metadata variable to set.
         metadata_value (str): The value to assign to the metadata variable.
     """
-    # Read the contents of the file
-    with open(file, 'r') as f:
+    # Fix windows encoding issue
+    with open(file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
     # Initialize variables
@@ -49,6 +49,6 @@ def set_metadata(file, metadata_name, metadata_value):
     if not updated and in_metadata_section:
         new_lines.insert(-1, f"{metadata_name} = {repr(metadata_value)}\n")
 
-    # Write back to the file
-    with open(file, 'w') as f:
+    # Fix windows encoding issue
+    with open(file, 'w', encoding='utf-8') as f:
         f.writelines(new_lines)
