@@ -32,8 +32,8 @@ jobs:
 
       - name: Update Metadata
         run: |
-          python tools/gh_actions metadata VERSION ${{ github.event.inputs.release_version }}
-          python tools/gh_actions metadata PRE_RELEASE false
+          python tools/gh_actions.py metadata VERSION ${{ github.event.inputs.release_version }}
+          python tools/gh_actions.py metadata PRE_RELEASE false
 
       - name: Build executable for Linux
         run: |
@@ -68,8 +68,8 @@ jobs:
 
       - name: Update Metadata
         run: |
-          python tools/gh_actions metadata VERSION ${{ github.event.inputs.release_version }}
-          python tools/gh_actions metadata PRE_RELEASE false
+          python tools/gh_actions.py metadata VERSION ${{ github.event.inputs.release_version }}
+          python tools/gh_actions.py metadata PRE_RELEASE false
 
       - name: Build executable for Windows
         run: |
@@ -104,8 +104,8 @@ jobs:
 
       - name: Update Metadata
         run: |
-          python tools/gh_actions metadata VERSION ${{ github.event.inputs.release_version }}
-          python tools/gh_actions metadata PRE_RELEASE false
+          python tools/gh_actions.py metadata VERSION ${{ github.event.inputs.release_version }}
+          python tools/gh_actions.py metadata PRE_RELEASE false
 
       - name: Build executable for macOS
         run: |
