@@ -57,7 +57,7 @@ if args.command == 'update':
     from helpers import update
     # Updating is not currently implemented.
     print("FeatureNotImplemented: This feature has not been implemented.")
-    exit(1)
+    sys.exit(1)
     print("Checking for updates...")
     updates, download_url, found = update.check_for_updates(VERSION)
     if updates:
@@ -293,7 +293,6 @@ def main():
                 "name": "change_type",
                 "message": "Select the type of change you're committing. (Move up and down to reveal more choices):",
                 "choices": choices,
-                "default": choices[0].value,  # Default selection
                 "pointer": "❯",  # Pointer emoji for highlighting
                 "validate": validate_required_input,
             }
