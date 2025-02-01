@@ -289,7 +289,7 @@ def main():
     answers = prompt(
         [
             {
-                "type": "list",
+                "type": "fuzzy",
                 "name": "change_type",
                 "message": "Select the type of change you're committing. (Move up and down to reveal more choices):",
                 "choices": choices,
