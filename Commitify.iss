@@ -9,7 +9,7 @@ Compression=lzma
 SolidCompression=yes
 
 [Files]
-Source: "C:\Users\ct\Documents\CommitifyInstaller\Commitify.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "CommitifyInstaller\Commitify.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{commondesktop}\Commitify"; Filename: "{app}\Commitify.exe"
