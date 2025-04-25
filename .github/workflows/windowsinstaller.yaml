@@ -18,7 +18,7 @@ jobs:
       - name: Download commitify.exe from release
         uses: robinraju/release-downloader@v1.8
         with:
-          tag: ${{ github.event.workflow_run.head_branch }}
+          latest: true
           fileName: commitify.exe
           out-file-path: CommitifyInstaller
 
