@@ -1,11 +1,15 @@
+# .github/workflows/installer.yml
 name: Build and Upload Commitify Installer
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Main Workflow"]   # Must match the 'name:' in main.yml
+    types:
+      - completed
 
 jobs:
   build-installer:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}   # Only run if main.yml succeeded
     runs-on: windows-latest
     steps:
       - name: Checkout repository
@@ -14,13 +18,9 @@ jobs:
       - name: Download commitify.exe from release
         uses: robinraju/release-downloader@v1.8
         with:
-          tag: ${{ github.event.release.tag_name }}
+          tag: ${{ github.event.workflow_run.head_branch }}
           fileName: commitify.exe
           out-file-path: CommitifyInstaller
-
-      - name: List files for debug
-        run: |
-          dir CommitifyInstaller
 
       - name: Compile Inno Setup Installer
         uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
