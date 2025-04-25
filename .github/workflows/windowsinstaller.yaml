@@ -6,6 +6,7 @@ on:
     workflows: ["Build Executables"]   # Must match the 'name:' in main.yml
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   build-installer:
