@@ -10,7 +10,6 @@ on:
 
 jobs:
   build-installer:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}   # Only run if main.yml succeeded
     runs-on: windows-latest
     steps:
       - name: Checkout repository
