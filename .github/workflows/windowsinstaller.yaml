@@ -1,0 +1,35 @@
+name: Build and Upload Commitify Installer
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build-installer:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download commitify.exe from release
+        uses: robinraju/release-downloader@v1.8
+        with:
+          tag: ${{ github.event.release.tag_name }}
+          fileName: commitify.exe
+          out-file-path: CommitifyInstaller
+
+      - name: List files for debug
+        run: |
+          dir CommitifyInstaller
+
+      - name: Compile Inno Setup Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: Commitify.iss
+
+      - name: Upload installer to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: CommitifyInstaller.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
