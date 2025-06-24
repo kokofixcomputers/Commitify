@@ -144,6 +144,7 @@ def main():
     if not config_helper.check_project_directory(current_working_directory):
         print(fg_color.red + "Error: Project not initiated with Commitify. Please run <commitify file> init. Then re-try." + Color.reset)
         exit(1)
+    configuration = config_helper.read_files()
     # Define the choices with emojis
     choices = [
         Choice(name="🎨 Improve structure / format of the code.", value=":art: style:"),
@@ -375,7 +376,7 @@ def main():
         if add:
             print("Adding changes.")
             os.system(f"git add .")
-        print(f"git commit -m '{answers['change_type']} {description['description']}' -m '{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>'")
+        os.system(f'git checkout -b {configuration['branch']}')
         os.system(
             f"""git commit -m "{answers['change_type']} {description['description']}" -m "{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>" """
         )
