@@ -38,6 +38,16 @@ def ensure_project_directory(dir, branch, standard_format):
         return_boolean = True
     return return_boolean
 
+def read_files():
+    current_dir = os.getcwd()
+    config = configurationlib.Instance(file=os.path.join(current_dir, ".commitify", "config.json"), format=configurationlib.Format.JSON)
+    data = {
+        'branch': config_data.get('branch'),
+        'format': config_data.get('format')
+    }
+    return data
+    
+
 def check_project_directory(dir):
     if not os.path.isdir(os.path.join(dir, ".commitify")):
         return False
