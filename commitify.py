@@ -376,7 +376,8 @@ def main():
         if add:
             print("Adding changes.")
             os.system(f"git add .")
-        os.system(f'git checkout -b {configuration['branch']}')
+        branch_name = configuration['branch']
+        os.system(f'git checkout -b {branch_name}')
         os.system(
             f"""git commit -m "{answers['change_type']} {description['description']}" -m "{longdescription['longdescription']}\n{issuesclosed}\n\nSigned-off-by: {signedby['signedby']} <{signedbyemail['signedbyemail']}>" """
         )
