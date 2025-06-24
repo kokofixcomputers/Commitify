@@ -31,6 +31,7 @@ parser.add_argument("--help", action="store_true", help="Help.")
 commandparser = parser.add_subparsers(dest='command', required=False)
 update = commandparser.add_parser('update', help='Update the script to latest version')
 init_git = commandparser.add_parser('init', help='Inits the git project with commitify.')
+version = commandparser.add_parser('version', help='NO NEED')
 
 def validate_required_input(input):
     """Validate that the input is not empty."""
@@ -65,6 +66,10 @@ if args.command == 'update':
         print("Updating...")
         update.update_script(download_url)
     sys.exit(0)
+
+elif args.command == 'version':
+    print("Commitify")
+    print(fg_color.green + "Running version: " + VERSION + Color.reset)
 
 elif args.command == 'init':
     if not utils_helper.is_git_directory():
