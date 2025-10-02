@@ -42,8 +42,8 @@ def read_files():
     current_dir = os.getcwd()
     config = configurationlib.Instance(file=os.path.join(current_dir, ".commitify", "config.json"), format=configurationlib.Format.JSON)
     data = {
-        'branch': config_data.get('branch'),
-        'format': config_data.get('format')
+        'branch': config.get('branch'),
+        'format': config.get('format')
     }
     return data
     
